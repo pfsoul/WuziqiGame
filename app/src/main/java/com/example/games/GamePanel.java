@@ -6,12 +6,16 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,8 +36,8 @@ public class GamePanel extends View {
 
     private float ratioPieceOfLineHeight = 3 * 1.0f / 4;
 
-    private List<Point> mWhiteArray = new ArrayList<>();
-    private List<Point> mBlackArray = new ArrayList<>();
+    private ArrayList<Point> mWhiteArray = new ArrayList<>();
+    private ArrayList<Point> mBlackArray = new ArrayList<>();
 
     //轮到白棋先走
     private boolean mIsWhite = true;
@@ -293,5 +297,33 @@ public class GamePanel extends View {
         }
         if(count == MAX_COUNT_IN_LINE) return  true;
         return false;
+    }
+
+    private static final String INSTANCE = "instance";
+    private static final String INSTANCE_GAME_OVER = "instance_game_over";
+    private static final String INSTANCE_WHITE_ARRAY = "instance_white_array";
+    private static final String INSTANCE_BLACK_ARRAY = "instance_black_array";
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(INSTANCE,super.onSaveInstanceState());
+        bundle.putBoolean(INSTANCE_GAME_OVER,mIsGameOver);
+        bundle.putParcelableArrayList(INSTANCE_WHITE_ARRAY,mWhiteArray);
+        bundle.putParcelableArrayList(INSTANCE_BLACK_ARRAY,mBlackArray);
+        return bundle;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if(state instanceof Bundle){
+            Bundle bundle = (Bundle) state;
+            mIsGameOver = bundle.getBoolean(INSTANCE_GAME_OVER);
+            mWhiteArray = bundle.getParcelableArrayList(INSTANCE_WHITE_ARRAY);
+            mBlackArray = bundle.getParcelableArrayList(INSTANCE_BLACK_ARRAY);
+            super.onRestoreInstanceState(bundle.getParcelable(INSTANCE));
+            return ;
+        }
+        super.onRestoreInstanceState(state);
     }
 }
