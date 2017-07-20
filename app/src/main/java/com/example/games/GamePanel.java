@@ -10,12 +10,11 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,10 +45,10 @@ public class GamePanel extends View {
     private boolean mIsWhiteWinner;
 
 
+
     public GamePanel(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
-        setBackgroundColor(0x44ff0000);
 
         init();
     }
@@ -298,7 +297,13 @@ public class GamePanel extends View {
         if(count == MAX_COUNT_IN_LINE) return  true;
         return false;
     }
-
+    public void start(){
+        mWhiteArray.clear();
+        mBlackArray.clear();
+        mIsGameOver = false;
+        mIsWhiteWinner = false;
+        invalidate();
+    }
     private static final String INSTANCE = "instance";
     private static final String INSTANCE_GAME_OVER = "instance_game_over";
     private static final String INSTANCE_WHITE_ARRAY = "instance_white_array";
